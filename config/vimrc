@@ -1,0 +1,85 @@
+set nocompatible    " No Vi Compatibility
+set noswapfile      " Turn off swapfile
+
+" tpope/vim-pathogen
+execute pathogen#infect()
+syntax on
+filetype plugin indent on
+
+set hidden            " Hide buffer when not displayed
+
+set gdefault          " Substitute multiple times per line by default
+
+set encoding=utf-8    " Default encoding
+
+set fileformats=unix,dos,mac
+
+set backspace=indent,eol,start " Allow backspacing over everything in insert mode
+
+" Toggle spell checking
+" nnoremap <F6> :set spell!<CR>
+
+set noruler       " Hide line and column number of the cursor position
+set number        " Show line numbers
+set cursorline    " Highlight current line
+
+" Display tabs and trailing spaces
+set list
+set listchars=tab:▷⋅,trail:⋅,nbsp:⋅
+set wrap            " Don't wrap lines
+set linebreak       " Wrap lines at convenient point
+" nnoremap <F9> :set wrap!<CR>
+
+set linespace=4     " Add some line space for easy reading
+
+" Default indent settings
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+set smarttab
+set autoindent
+set smartindent
+
+" Folding settings
+set foldmethod=indent   " Fold based on indent
+set foldnestmax=3       " Deepest fold is 3 levels
+set nofoldenable        " Don't fold by default
+
+set wildmode=list:longest   " Make cmdline tab completion similar to bash
+set wildmenu                " Enable ctrl-n and ctrl-p to scroll thru matches
+set wildignore=*.dll,*.o,*.obj,*~,*.pyc,*.bak,*.exe,*.jpg,*.jpeg,*.png,*.gif,*$py.class,*.class " Stuff to ignore when tab completing
+
+" Disable Toolbar, Scrollbar
+set guioptions-=T
+set guioptions-=r
+
+set formatoptions-=o        " Don't continue comments when pushing o/O
+
+" Vertical / Horizontal scroll off settings
+set scrolloff=3
+set sidescrolloff=7
+set sidescroll=1
+
+set showmatch
+set incsearch   " Find the next match as we type the search
+set hlsearch    " Highlight searches by default
+
+set mouse=a     " Enable mouse everywhere
+set mousehide   " Hide mouse pointer while typing
+set mousemodel=popup
+
+set ttymouse=xterm2
+set ttyfast
+
+set history=1000    " Store lots of :cmdline history
+set showcmd         " Show incomplete cms down the bottom
+set showmode        " Show current mode down the bottom
+set cmdheight=2
+
+set laststatus=2    " Status in two lines
+
+set viminfo=!,'100,\"100,:20,<50,s10,h,n~/.vim/.viminfo " Remember where we are, support yankring
+
+set t_Co=256    " Enable 256 colors
+

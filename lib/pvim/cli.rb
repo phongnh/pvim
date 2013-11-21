@@ -4,6 +4,10 @@ module Pvim
   class CLI < Thor
     include Thor::Actions
 
+    def self.source_root
+      File.expand_path File.join('..', '..', '..', 'config'), __FILE__
+    end
+
     desc 'version', 'Prints version'
     def version
       puts Pvim::VERSION
@@ -22,6 +26,8 @@ module Pvim
         empty_directory 'autoload'
         empty_directory 'bundle'
         pathogen dir
+        copy_file File.join(self.class.source_root, 'vimrc'), 'vimrc'
+        run "git init"
       end
     end
   end
