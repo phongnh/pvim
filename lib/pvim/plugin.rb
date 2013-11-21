@@ -29,6 +29,7 @@ module Pvim
 
     desc 'add URL', 'Add vim plugins'
     def add(url)
+      url = add_github_prefix(url)
       check_url(url)
       inside pvim do
         empty_directory bundle_dir
@@ -38,6 +39,7 @@ module Pvim
 
     desc 'remove URL', 'Remove vim plugins'
     def remove(url)
+      url = add_github_prefix(url)
       check_url(url)
       if plugin = find_plugin(url)
         inside pvim do
@@ -104,6 +106,10 @@ module Pvim
         end
 
         @plugins
+      end
+
+      def add_github_prefix(url)
+        return "https://github.com/#{url}" unless url.match(/^https?\:\/\/github\.com/)
       end
 
       def check_url(url)
