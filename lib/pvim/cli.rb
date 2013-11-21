@@ -1,4 +1,5 @@
 require 'pvim/version'
+require 'pvim/plugin'
 
 module Pvim
   class CLI < Thor
@@ -30,5 +31,8 @@ module Pvim
         run "git init"
       end
     end
+
+    desc 'plugin SUBCOMMAND', 'Manage vim scripts'
+    subcommand 'plugin', Pvim::Plugin
   end
 end
