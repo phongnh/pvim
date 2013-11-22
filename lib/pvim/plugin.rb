@@ -27,32 +27,40 @@ module Pvim
       end
     end
 
-    desc 'add URL', 'Add vim plugins'
-    def add(url)
-      url = add_github_prefix(url)
-      check_url(url)
-      inside pvim do
-        empty_directory bundle_dir
-        run "git submodule add #{url.inspect} #{installed_dir(url).inspect}"
+    desc 'add URLS', 'Add vim plugins'
+    def add(url, *urls)
+      urls.unshift url
+      urls.uniq!
+      urls.each do |u|
+        u = add_github_prefix(u)
+        check_url(u)
+        inside pvim do
+          empty_directory bundle_dir unless Dir.exists?(bundle_dir)
+          run "git submodule add #{u.inspect} #{installed_dir(u).inspect}"
+        end
       end
     end
 
-    desc 'remove URL', 'Remove vim plugins'
-    def remove(url)
-      url = add_github_prefix(url)
-      check_url(url)
-      if plugin = find_plugin(url)
-        inside pvim do
-          empty_directory bundle_dir
-          path = plugin.last
-          submodule = ['submodule', path].join('.')
-          run "git submodule deinit -f #{path.inspect}"
-          run "git rm -rf #{path.inspect}"
-          run "git config -f .gitmodules --remove-section #{submodule.inspect}"
-          remove_file File.join('.git', 'modules', path)
+    desc 'remove URLS', 'Remove vim plugins'
+    def remove(url, *urls)
+      urls.unshift url
+      urls.uniq!
+      urls.each do |u|
+        u = add_github_prefix(u)
+        check_url(u)
+        if plugin = find_plugin(u)
+          inside pvim do
+            empty_directory bundle_dir unless Dir.exists?(bundle_dir)
+            path = plugin.last
+            submodule = ['submodule', path].join('.')
+            run "git submodule deinit -f #{path.inspect}"
+            run "git rm -rf #{path.inspect}"
+            run "git config -f .gitmodules --remove-section #{submodule.inspect}"
+            remove_file File.join('.git', 'modules', path)
+          end
+        else
+          say "#{url} is not installed", Color::RED
         end
-      else
-        say "#{url} is not installed", Color::RED
       end
     end
 
