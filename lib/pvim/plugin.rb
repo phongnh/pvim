@@ -124,7 +124,7 @@ module Pvim
       end
 
       def is_github_url?(url)
-        !!url.match(/^https?\:\/\/github\.com\/[a-z0-9\-\._]+\/[a-z0-9\-\._]+$/)
+        !!url.match(/^https?\:\/\/github\.com\/[a-zA-Z0-9\-\._]+\/[a-zA-Z0-9\-\._]+$/)
       end
 
       def value(s)
