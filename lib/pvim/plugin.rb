@@ -117,7 +117,8 @@ module Pvim
       end
 
       def add_github_prefix(url)
-        return "https://github.com/#{url}" unless url.match(/^https?\:\/\/github\.com/)
+        url = "https://github.com/#{url}" unless url.match(/^https?\:\/\/github\.com/)
+        url
       end
 
       def check_url(url)
