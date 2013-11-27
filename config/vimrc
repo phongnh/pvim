@@ -1,36 +1,35 @@
-set nocompatible    " No Vi Compatibility
-set noswapfile      " Turn off swapfile
+set nocompatible      " No Vi Compatibility
+set noswapfile        " Turn off swapfile
 
-" tpope/vim-pathogen
-execute pathogen#infect()
-syntax on
-filetype plugin indent on
+set timeoutlen=500    " Mapping timeout
+set ttimeoutlen=50    " Keycode timeout
 
-set hidden            " Hide buffer when not displayed
+set mouse=a           " Enable mouse everywhere
+set mousehide         " Hide mouse pointer while typing
+set mousemodel=popup
 
+set ttymouse=xterm2
+set ttyfast
+
+set history=1000      " Store lots of command lines in history
+set showcmd           " Show incomplete command down the bottom
+set showmode          " Show current mode down the bottom
+set laststatus=2      " Status in two lines
+set cmdheight=2
+
+if !exists('$TMUX')
+    set clipboard=unnamed " Sync with OS clipboard
+endif
+
+set hidden            " Allow buffer switching without saving
+set autoread          " Auto-reload if file is saved externally
+set showfulltag
+set modeline
+set modelines=5
 set gdefault          " Substitute multiple times per line by default
-
 set encoding=utf-8    " Default encoding
-
 set fileformats=unix,dos,mac
-
 set backspace=indent,eol,start " Allow backspacing over everything in insert mode
-
-" Toggle spell checking
-" nnoremap <F6> :set spell!<CR>
-
-set noruler       " Hide line and column number of the cursor position
-set number        " Show line numbers
-set cursorline    " Highlight current line
-
-" Display tabs and trailing spaces
-set list
-set listchars=tab:▷⋅,trail:⋅,nbsp:⋅
-set wrap            " Don't wrap lines
-set linebreak       " Wrap lines at convenient point
-" nnoremap <F9> :set wrap!<CR>
-
-set linespace=4     " Add some line space for easy reading
 
 " Default indent settings
 set tabstop=4
@@ -41,45 +40,202 @@ set smarttab
 set autoindent
 set smartindent
 
-" Folding settings
-set foldmethod=indent   " Fold based on indent
-set foldnestmax=3       " Deepest fold is 3 levels
-set nofoldenable        " Don't fold by default
+" Toggle spell checking
+nnoremap ]d :set spell!<CR>
 
-set wildmode=list:longest   " Make cmdline tab completion similar to bash
-set wildmenu                " Enable ctrl-n and ctrl-p to scroll thru matches
-set wildignore=*.dll,*.o,*.obj,*~,*.pyc,*.bak,*.exe,*.jpg,*.jpeg,*.png,*.gif,*$py.class,*.class " Stuff to ignore when tab completing
+set noruler       " Hide line and column number of the cursor position
+set number        " Show line numbers
+set cursorline    " Highlight current line
+set linespace=4   " Add some line space for easy reading
 
-" Disable Toolbar, Scrollbar
-set guioptions-=T
-set guioptions-=r
-
-set formatoptions-=o        " Don't continue comments when pushing o/O
+" Display tabs and trailing spaces
+set list
+set listchars=tab:→\ ,trail:•,nbsp:•,extends:❯,precedes:❮
+set wrap linebreak      " Wrap lines at convenient point
+set shiftround
+let &showbreak='↪ '
+nnoremap ]w :set wrap!<CR>
 
 " Vertical / Horizontal scroll off settings
 set scrolloff=3
 set sidescrolloff=7
 set sidescroll=1
 
-set showmatch
-set incsearch   " Find the next match as we type the search
+set wildmenu                     " Enable ctrl-n and ctrl-p to scroll thru matches
+set wildmode=list:longest,full   " Make cmdline tab completion similar to bash
+set wildignorecase
+set wildignore+=*.dll,*.o,*.obj,*~,*.pyc,*.bak,*.exe,*.jpg,*.jpeg,*.png,*.gif,*$py.class,*.class,*.DS_Store
+
+set splitbelow
+set splitright
+
+" Disable sounds
+set noerrorbells
+set novisualbell
+set t_vb=
+
 set hlsearch    " Highlight searches by default
+set incsearch   " Find the next match as we type the search
+set showmatch   " Automatically highlight matching braces/brackets/etc
+set matchtime=2
 
-set mouse=a     " Enable mouse everywhere
-set mousehide   " Hide mouse pointer while typing
-set mousemodel=popup
+if executable('ag')
+    set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
+    set grepformat=%f:%l:%c:%m
+elseif executable('ack')
+    set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
+    set grepformat=%f:%l:%c:%m
+endif
 
-set ttymouse=xterm2
-set ttyfast
+" Folding settings
+set foldenable          " Enable fold by default
+" set nofoldenable        " Don't fold by default
+set foldmethod=indent   " Fold based on indent
+set foldnestmax=3       " Deepest fold is 3 levels
+set foldlevelstart=99   " Open all folds by default
 
-set history=1000    " Store lots of :cmdline history
-set showcmd         " Show incomplete cms down the bottom
-set showmode        " Show current mode down the bottom
-set cmdheight=2
+set guioptions+=t       " Tear off menu items
+set guioptions-=T       " Disable toolbar
+set guioptions-=r       " Disable right scrollbar
+set guioptions-=l       " Disable left scrollbar
 
-set laststatus=2    " Status in two lines
+set formatoptions-=o    " Don't continue comments when pushing o/O
 
-set viminfo=!,'100,\"100,:20,<50,s10,h,n~/.vim/.viminfo " Remember where we are, support yankring
+if exists('+undofile')
+    set undofile
+    set undodir=~/.vim/.cache/undo
+endif
+
+set backup                          " Backups
+set backupdir=~/.vim/.cache/backup
+set directory=~/.vim/.cache/swap    " Swap files
+set viminfo=!,'100,\"100,:20,<50,s10,h,n~/.vim/.cache/.viminfo " Remember where we are, support yankring
 
 set t_Co=256    " Enable 256 colors
 
+" Left/Right arrow keys change buffers
+nnoremap <left>  :bprev<CR>
+nnoremap <right> :bnext<CR>
+nnoremap <up>    :tabnext<CR>
+nnoremap <down>  :tabprev<CR>
+
+" Toggle paste
+map <F6> :set invpaste paste?<CR>
+
+" Change cursor position in insert mode
+inoremap <C-h> <left>
+inoremap <C-l> <right>
+
+" Clear from cursor back to begining of line
+inoremap <C-u> <C-g>u<C-u>
+
+" Folds
+nnoremap zr zr:echo &foldlevel<cr>
+nnoremap zm zm:echo &foldlevel<cr>
+nnoremap zR zR:echo &foldlevel<cr>
+nnoremap zM zM:echo &foldlevel<cr>
+
+" Screen line scroll
+nnoremap <silent> j gj
+nnoremap <silent> k gk
+
+" Auto center
+nnoremap <silent> n     nzz
+nnoremap <silent> N     Nzz
+nnoremap <silent> *     *zz
+nnoremap <silent> #     #zz
+nnoremap <silent> g*    g*zz
+nnoremap <silent> g#    g#zz
+nnoremap <silent> <C-o> <C-o>zz
+nnoremap <silent> <C-i> <C-i>zz
+
+" Reselect visual block after indent
+vnoremap < <gv
+vnoremap > >gv
+
+" Reselect last paste
+nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+
+" Make mouse middle click paste without formatting it.
+map <MouseMiddle> <Esc>"*p
+" Make shift-insert work like in Xterm
+map  <S-Insert> <MiddleMouse>
+map! <S-Insert> <MiddleMouse>
+
+" Copy/Paste to and from Desktop Environment
+noremap <leader>yy "+y
+noremap <leader>pp "+gP
+
+nnoremap <leader>v <C-w>v<C-w>l     " Split vertical
+nnoremap <leader>s <C-w>s           " Split horizontal
+nnoremap <leader>vsa :vert sba<cr>
+
+" Window navigation
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" Make Y consistent with C and D, see :help Y
+nnoremap Y y$
+
+" Hide annoying quit message
+nnoremap <C-c> <C-c>:echo<cr>
+
+" Quick buffer open
+nnoremap gb :ls<cr>:e #
+
+" Make <Leader><Space> clear the highlight search as well as redraw
+nnoremap <Leader><Space> :nohlsearch<CR><Leader><Space>
+inoremap <Leader><Space> <C-O>:nohlsearch<CR>
+
+if has("gui_running")
+    set lines=999 columns=999       " Open maximized window
+
+    " Key mapping for saving file
+    noremap  <C-s> <Esc>:w<CR>
+    inoremap <C-s> <Esc>:w<CR>
+    nnoremap <C-s> <Esc>:w<CR>
+    vnoremap <C-s> <Esc>:w<CR>
+
+    if has("gui_gnome")
+        " Bind Alt-] to indent
+        nnoremap <M-]> >>
+        vnoremap <M-]> >gv
+        inoremap <M-]> <C-O>>>
+
+        " Bind Alt-[ to outdent
+        nnoremap <M-[> <<
+        vnoremap <M-[> <gv
+        inoremap <M-[> <C-O><
+    elseif has("gui_mac") || has("gui_macvim")
+        set antialias
+
+        " Make Mac's Option key behave as the Meta key
+        set invmmta
+        try
+            set transparency=5
+        catch
+        endtry
+
+        " Bind Alt-] to indent
+        nnoremap <M-]> >>
+        vnoremap <M-]> >gv
+        inoremap <M-]> <C-O>>>
+
+        " Bind Alt-[ to outdent
+        nnoremap <M-[> <<
+        vnoremap <M-[> <gv
+        inoremap <M-[> <C-O><
+    endif
+endif
+
+autocmd FileType ruby,erb,haml,scss,sass,slim,coffee setlocal tabstop=2 shiftwidth=2 softtabstop=2
+autocmd FileType sql,xml,html,css,javascript,json    setlocal tabstop=4 shiftwidth=4 softtabstop=4
+autocmd FileType python,go,c setlocal tabstop=4 shiftwidth=4 softtabstop=4
+autocmd BufEnter .vimrc      setlocal tabstop=4 shiftwidth=4 softtabstop=4
+
+" tpope/vim-pathogen
+execute pathogen#infect()
+syntax on
+filetype plugin indent on
